@@ -4,3 +4,6 @@
 [submodule "foundry-version/lib/chainlink-brownie-contracts"]
 	path = foundry-version/lib/chainlink-brownie-contracts
 	url = https://github.com/smartcontractkit/chainlink-brownie-contracts
+[submodule "foundry-version/lib/ds-test"]
+	path = foundry-version/lib/ds-test
+	url = https://github.com/dapphub/ds-test
