@@ -11,7 +11,7 @@ describe("Lottery", function () {
     await this.lottery.deployed();
   });
 
-  it("Should return the new greeting once it's changed", async function () {
+  it("is everything working", async function () {
     const [owner, addr1, addr2] = await ethers.getSigners();
     const wei = ethers.utils.parseEther("1.0");
     const bal = await this.lottery.contractBalance();

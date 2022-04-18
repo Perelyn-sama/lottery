@@ -54,9 +54,6 @@ contract Lottery is ReentrancyGuard {
     constructor() payable {}
 
     modifier onlyWinner() {
-        // for (uint256 i = 0; i < winners.length; i++) {
-        //     require(msg.sender == winners[i], "Not a winner");
-        // }
         require(canWithdraw[msg.sender] == true);
         _;
     }
@@ -90,14 +87,12 @@ contract Lottery is ReentrancyGuard {
         uint256 share = bal / winners.length;
         for (uint256 i = 0; i < winners.length; i++) {
             address payable x = payable(winners[i]);
-            // x.transfer(bal / winners.length);
             _withdraw(x, share);
         }
     }
 
     function _withdraw(address _address, uint256 _amount) internal {
         (bool success, ) = _address.call{value: _amount}("");
-
         require(success, "WITHDRAW: Transfer failed.");
     }
 
