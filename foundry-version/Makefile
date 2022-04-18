@@ -13,8 +13,11 @@ clean  :; forge clean
 # Remove modules
 remove :; rm -rf .gitmodules && rm -rf .git/modules/* && rm -rf lib && touch .gitmodules && git add . && git commit -m "modules"
 
-# Install the Modules
-install :; forge install dapphub/ds-test && forge install rari-capital/solmate && forge install brockelmore/forge-std && forge install ZeframLou/clones-with-immutable-args && forge install smartcontractkit/chainlink-brownie-contracts
+# # Install the Modules
+# install :; forge install dapphub/ds-test && forge install rari-capital/solmate && forge install brockelmore/forge-std && forge install ZeframLou/clones-with-immutable-args && forge install smartcontractkit/chainlink-brownie-contracts && forge install https://github.com/smartcontractkit/chainlink
+
+install: 
+	forge install smartcontractkit/chainlink-brownie-contracts && forge install dapphub/ds-test
 
 # Update Dependencies
 update:; forge update
