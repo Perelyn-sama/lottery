@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-// ReentracncyGuard implementation from open zeppelin 
+// ReentracncyGuard implementation from open zeppelin
 abstract contract ReentrancyGuard {
     // Booleans are more expensive than uint256 or any type that takes up a full
     // word because each write operation emits an extra SLOAD to first read the
@@ -46,7 +46,6 @@ abstract contract ReentrancyGuard {
 }
 
 contract Lottery is ReentrancyGuard {
-
     // To store the guesses players made
     mapping(address => uint256) public guesses;
 
@@ -56,7 +55,7 @@ contract Lottery is ReentrancyGuard {
     // To store the addresses that play the game
     address[] public players;
 
-    // To store the addresses that got the guess right 
+    // To store the addresses that got the guess right
     address[] public winners;
 
     // Made this so i can grant withdrawal right to just the winners addresses
@@ -67,11 +66,14 @@ contract Lottery is ReentrancyGuard {
 
     // Grants access only to winners
     modifier onlyWinner() {
-        require(canWithdraw[msg.sender] == true), "This address is not a winner";
+        require(
+            canWithdraw[msg.sender] == true,
+            "This address is not a winner"
+        );
         _;
     }
 
-    // Play the game 
+    // Play the game
     function takeAGuess(uint256 guess) public payable {
         require(guess <= 20, "Guess between 1 - 20");
         require(msg.value == fee, "Not enough funds to take a guess");
@@ -109,6 +111,7 @@ contract Lottery is ReentrancyGuard {
             _withdraw(x, share);
         }
     }
+
     // Internal function for the withdraw logic
     function _withdraw(address _address, uint256 _amount) internal {
         (bool success, ) = _address.call{value: _amount}("");
@@ -118,5 +121,9 @@ contract Lottery is ReentrancyGuard {
     // Check the balance of the the address passed in
     function balanceOf(address acct) public view returns (uint256) {
         return acct.balance;
+    }
+
+    function length() public view returns (uint256 len) {
+        len = winners.length;
     }
 }
