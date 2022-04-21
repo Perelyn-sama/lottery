@@ -8,6 +8,29 @@ import "../Lottery.sol";
 
 import "../libraries/Strings.sol";
 
+library Bool {
+    function toUInt256(bool x) internal pure returns (uint256 r) {
+        assembly {
+            r := x
+        }
+    }
+
+    function toBool(uint256 x) internal pure returns (string memory r) {
+        // x == 1 ? r = "True" : "False";
+        if (x == 1) {
+            r = "True";
+        } else if (x == 0) {
+            r = "False";
+        } else {}
+    }
+
+    function toText(bool x) internal pure returns (string memory r) {
+        uint256 inUint = toUInt256(x);
+        string memory inString = toBool(inUint);
+        r = inString;
+    }
+}
+
 contract ContractTest is DSTest {
     // using Strings for string;
 
@@ -15,7 +38,6 @@ contract ContractTest is DSTest {
     Lottery private lottery;
     StdStorage private stdstore;
     uint256 private length;
-    // Cheats cheats = Cheats(HEVM_ADDRESS);
 
     address private addr1 = 0x68df7639ef63fA25D618cdEEBbdd1093d37c8e18;
     address private addr2 = 0x476E35cc46f86B3028Ce0c2bD0C8496b6e79f47f;
@@ -24,25 +46,25 @@ contract ContractTest is DSTest {
         lottery = new Lottery();
         vm.deal(addr1, 1 ether);
         vm.deal(addr2, 1 ether);
-        // emit log_uint(addr1.balance);
-        // emit log_address(addr1);
     }
 
     function testGuess() public {
+        emit log_named_address("contract address", address(this));
         // use default account to Take address
+        vm.prank(msg.sender);
         lottery.takeAGuess{value: 1 ether}(5);
 
         // Changes msg.sender of next call to be `addr1`
         vm.prank(addr1);
 
         // Trigger take a guess function as `addr1`
-        lottery.takeAGuess{value: 1 ether}(5);
+        lottery.takeAGuess{value: 1 ether}(2);
 
         // Changes msg.sender of next call to be `addr2`
         vm.prank(addr2);
 
         // Trigger take a guess function as `addr2`
-        lottery.takeAGuess{value: 1 ether}(5);
+        lottery.takeAGuess{value: 1 ether}(2);
 
         // Log the balance of the contract
         // emit log_uint(lottery.contractBalance());
@@ -65,19 +87,29 @@ contract ContractTest is DSTest {
             );
         }
 
+        bool canWithdraw = lottery.canWithdraw(msg.sender);
+        emit log_named_string("In text", Bool.toText(canWithdraw));
+
         // withdraw
-        emit log_address(msg.sender);
+        vm.prank(msg.sender);
         lottery.withdraw();
 
-        for (uint256 i = 0; i < 3; ++i) {
+        // for (uint256 i = 0; i < length; ++i) {
+        //     emit log_address(lottery.winners(i));
+        //     emit log_uint(lottery.winners(i).balance);
+        // }
+
+        for (uint256 i = 0; i < length; ++i) {
             // emit log_address(lottery.winners(i));
-            emit log_uint(lottery.winners(i).balance);
+
+            // Convert index to string for logging
+            string memory val = Strings.toString(i);
+            emit log_named_uint(
+                string(abi.encodePacked("Winner ", val, "", " Balance")),
+                lottery.winners(i).balance
+            );
         }
     }
 
-    function testWithdraw() public {
-        // emit log_uint(lottery.winners.length);
-        // emit log_uint(lottery.winners().length);
-        emit log_uint(length);
-    }
+    // function lib() public {}
 }
