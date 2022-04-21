@@ -76,7 +76,7 @@ contract Lottery is ReentrancyGuard {
     // Play the game
     function takeAGuess(uint256 guess) public payable {
         require(guess <= 20, "Guess between 1 - 20");
-        require(msg.value == fee, "Not enough funds to take a guess");
+        require(msg.value >= fee, "Not enough funds to take a guess");
         require(guesses[msg.sender] == 0, "Already took a guess");
         require(address(this).balance <= 3 ether, "maximum guesses");
         guesses[msg.sender] = guess;
