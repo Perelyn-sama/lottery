@@ -1,6 +1,0 @@
-TODO Install packages in hardhat version
-TODO Merge lottery logic with vrf 
-TODO Add contract to foundry version
-TODO Start foundry testing 
-TODO Sleep😂^_^
-TODO 
