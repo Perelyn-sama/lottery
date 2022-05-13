@@ -1,0 +1,12 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/root/projects/lottery'
+forge clean
+rm -rf .gitmodules && rm -rf .git/modules/* && rm -rf lib && touch .gitmodules && git add . && git commit -m "modules"
+forge install smartcontractkit/chainlink-brownie-contracts && forge install dapphub/ds-test
+forge update
+nix-env -f https://github.com/dapphub/dapptools/archive/master.tar.gz -iA solc-static-versions.solc_0_8_11
+ 
+forge clean && forge build --optimize --optimize-runs 1000000
+dapp build
+make: Leaving directory '/root/projects/lottery'
+ 

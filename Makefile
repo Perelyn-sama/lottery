@@ -2,43 +2,30 @@
 # (-include to ignore error if it does not exist)
 -include .env
 
-all: clean remove install update solc build dappbuild
+# Install the Modules
+install :; 
+	forge install dapphub/ds-test 
+	forge install OpenZeppelin/openzeppelin-contracts
 
-# Install proper solc version.
-solc:; nix-env -f https://github.com/dapphub/dapptools/archive/master.tar.gz -iA solc-static-versions.solc_0_8_11
+deploy:
+	forge create --rpc-url ${LOCAL_RPC_URL} --constructor-args 2274 --private-key ${LOCAL_PRIVATE_KEY} src/Merge.sol:VRFv2Consumer 
 
-# Clean the repo
-clean  :; forge clean
+d: 
+	forge create --rpc-url ${LOCAL_RPC_URL} --private-key ${LOCAL_PRIVATE_KEY} src/Lottery.sol:Lottery 
 
-# Remove modules
-remove :; rm -rf .gitmodules && rm -rf .git/modules/* && rm -rf lib && touch .gitmodules && git add . && git commit -m "modules"
+abi: 
+	cast abi-encode "constructor(uint64)" 2274
 
-# # Install the Modules
-# install :; forge install dapphub/ds-test && forge install rari-capital/solmate && forge install brockelmore/forge-std && forge install ZeframLou/clones-with-immutable-args && forge install smartcontractkit/chainlink-brownie-contracts && forge install https://github.com/smartcontractkit/chainlink
+verify:
+	forge verify-contract --chain-id 4 --num-of-optimizations 200 --constructor-args 0x00000000000000000000000000000000000000000000000000000000000008e2 --compiler-version v0.8.10+commit.fc410830 0x5fbdb2315678afecb367f032d93f642f64180aa3 src/CustomNFT.sol:CustomNFT ${ETHERSCAN_KEY}
 
-install: 
-	forge install smartcontractkit/chainlink-brownie-contracts && forge install dapphub/ds-test
+verify-check: 
+	forge verify-check --chain-id 4 dfxrzgvtfwv8cdgg4cgx21rekrhr3hmfjsu9td8a7kfkamsk99 ${ETHERSCAN_KEY}
 
-# Update Dependencies
-update:; forge update
+setBaseUri: 
+	  cast send --rpc-url ${LOCAL_RPC_URL} 0x5fbdb2315678afecb367f032d93f642f64180aa3  "setBaseURI(string)" "https://gateway.pinata.cloud/ipfs/QmfAASejhcLL3MrmSpUwZyhv9DnyBrCsNxASVpbTzTjS3P" --private-key ${LOCAL_PRIVATE_KEY}
 
-# Builds
-build  :; forge clean && forge build --optimize --optimize-runs 1000000
-dappbuild :; dapp build
+alt:
+	cast call --rpc-url ${LOCAL_RPC_URL} --private-key ${LOCAL_PRIVATE_KEY} 0x5fbdb2315678afecb367f032d93f642f64180aa3 "saleConfig" --etherscan-api-key ${ETHERSCAN_KEY} 
 
-# chmod scripts
-scripts :; chmod +x ./scripts/*
 
-# Tests
-test   :; forge clean && forge test --optimize --optimize-runs 1000000 -v # --ffi # enable if you need the `ffi` cheat code on HEVM
-
-# Lints
-lint :; yarn prettier --write src/**/*.sol && prettier --write src/*.sol
-
-# Generate Gas Snapshots
-snapshot :; forge clean && forge snapshot --optimize --optimize-runs 1000000
-
-# Fork Mainnet With Hardhat
-mainnet-fork :; npx hardhat node --fork ${ETH_MAINNET_RPC_URL}
-
-# Rename all instances of this repo with the new repo na

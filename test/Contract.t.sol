@@ -3,7 +3,6 @@ pragma solidity ^0.8.7;
 
 import "ds-test/test.sol";
 import "forge-std/Test.sol";
-import "../src/Contract.sol";
 import "../src/Lottery.sol";
 
 import "./libraries/Strings.sol";

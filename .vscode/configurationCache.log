@@ -1,0 +1,1 @@
+{"buildTargets":["all","build","clean","dappbuild","install","lint","mainnet-fork","remove","scripts","snapshot","solc","test","update"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
