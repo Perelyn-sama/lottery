@@ -4,8 +4,8 @@
 
 # Install the Modules
 install :; 
-	forge install dapphub/ds-test 
-	forge install OpenZeppelin/openzeppelin-contracts
+	forge install foundry-rs/forge-std
+	forge install smartcontractkit/chainlink-brownie-contracts
 
 deploy:
 	forge create --rpc-url ${LOCAL_RPC_URL} --constructor-args 2274 --private-key ${LOCAL_PRIVATE_KEY} src/Merge.sol:VRFv2Consumer 
